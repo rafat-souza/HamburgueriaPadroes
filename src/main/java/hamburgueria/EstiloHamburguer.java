@@ -20,4 +20,9 @@ public abstract class EstiloHamburguer implements Hamburguer {
 
     @Override
     public abstract double getPreco();
+
+    @Override
+    public String aceitar(HamburgueriaVisitor visitor) {
+        return visitor.visitarHamburguer(this);
+    }
 }

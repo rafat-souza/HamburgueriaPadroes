@@ -52,7 +52,14 @@ public class Combo {
         return estrategiaDeDesconto.aplicar(hamburguer.getPreco());
     }
 
-    public Hamburguer getHamburguer() { return this.hamburguer; }
+    public Hamburguer    getHamburguer()        { return hamburguer; }
+    public Acompanhamento getAcompanhamento()   { return acompanhamento; }
+    public Bebida        getBebida()            { return bebida; }
+    public String        getDescricaoDesconto() { return estrategiaDeDesconto.getDescricao(); }
+
+    public String aceitar(HamburgueriaVisitor visitor) {
+        return visitor.visitarCombo(this);
+    }
 
     public void exibirResumo() {
         System.out.println("Lanche: " + hamburguer.getDescricao() + " | R$ " + hamburguer.getPreco());
