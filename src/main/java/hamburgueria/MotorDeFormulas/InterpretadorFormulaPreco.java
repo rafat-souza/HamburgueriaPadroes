@@ -68,13 +68,17 @@ public class InterpretadorFormulaPreco implements ExpressaoPreco {
     }
 
     private static ExpressaoPreco criarOperacao(String op, ExpressaoPreco esq, ExpressaoPreco dir) {
-        return switch (op) {
-            case "+" -> new OperacaoAdicao(esq, dir);
-            case "-" -> new OperacaoSubtracao(esq, dir);
-            case "*" -> new OperacaoMultiplicacao(esq, dir);
-            case "/" -> new OperacaoDivisao(esq, dir);
-            default  -> throw new IllegalArgumentException("Operador desconhecido: " + op);
-        };
+        if (op.equals("+")) {
+            return new OperacaoAdicao(esq, dir);
+        } else if (op.equals("-")) {
+            return new OperacaoSubtracao(esq, dir);
+        } else if (op.equals("*")) {
+            return new OperacaoMultiplicacao(esq, dir);
+        } else if (op.equals("/")) {
+            return new OperacaoDivisao(esq, dir);
+        } else {
+            throw new IllegalArgumentException("Operador desconhecido: " + op);
+        }
     }
 
 }
