@@ -1,7 +1,8 @@
-Esse programa representa o processo de pedidos de uma hamburgueria. Usa os padrões de software decorator, bridge, factory method e abstract factory. 
+Esse programa representa o sistema de uma hamburgueria. Utiliza todos os 23 padrões de projeto.
 
 ## Diagrama
-<img width="1273" height="752" alt="image" src="https://github.com/user-attachments/assets/65a94e15-a9b8-432c-a2f5-d140952b3b1a" />
+<img width="3549" height="1341" alt="Hamburgueria Diagrama PNG" src="https://github.com/user-attachments/assets/a352ee3a-1ca6-4394-83ff-1ebe6fc13b19" />
+
 
 
 
