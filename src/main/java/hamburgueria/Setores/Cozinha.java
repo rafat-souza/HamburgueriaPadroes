@@ -8,8 +8,8 @@ import hamburgueria.SetorDaHamburgueria;
 public class Cozinha implements PedidoObserver, SetorDaHamburgueria {
 
     @Override
-    public void onPedidoFinalizado(Combo combo) {
-        System.out.println("[Cozinha] Notificação recebida via Observer para o lanche: " + combo.getHamburguer().getDescricao());
+    public String onPedidoFinalizado(Combo combo) {
+        return "[Cozinha] Notificação recebida via Observer para o lanche: " + combo.getHamburguer().getDescricao();
     }
 
     @Override

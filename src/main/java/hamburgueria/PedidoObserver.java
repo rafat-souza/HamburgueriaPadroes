@@ -1,5 +1,5 @@
 package hamburgueria;
 
 public interface PedidoObserver {
-    void onPedidoFinalizado(Combo combo);
+    String onPedidoFinalizado(Combo combo);
 }

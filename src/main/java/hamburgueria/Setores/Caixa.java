@@ -7,8 +7,8 @@ import hamburgueria.SetorDaHamburgueria;
 public class Caixa implements PedidoObserver, SetorDaHamburgueria {
 
     @Override
-    public void onPedidoFinalizado(Combo combo) {
-        System.out.println("[Caixa] Cobrança: R$ " + combo.getHamburguer().getPreco());
+    public String onPedidoFinalizado(Combo combo) {
+        return "[Caixa] Cobrança: R$ " + combo.getHamburguer().getPreco();
     }
 
     @Override
