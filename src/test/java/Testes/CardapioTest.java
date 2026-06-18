@@ -32,7 +32,6 @@ public class CardapioTest {
 
     @BeforeEach
     public void setUp() {
-        // ── Folhas: lanches (usando classes reais do projeto) ──────────────────
         itemClassico       = new ItemHamburguer(new BurgerClassico(new Carne()));
         itemSmashCarne     = new ItemHamburguer(new SmashBurger(new Carne()));
         itemGourmet        = new ItemHamburguer(new BurgerGourmet(new Carne()));
@@ -41,7 +40,6 @@ public class CardapioTest {
         itemVeganoDecorado = new ItemHamburguer(
                 new BaconVegano(new BurgerClassico(new Planta())));
 
-        // ── Seções de lanche ───────────────────────────────────────────────────
         secaoTradicionais = new SecaoCardapio("Lanches Tradicionais");
         secaoTradicionais.addItem(itemClassico);
         secaoTradicionais.addItem(itemSmashCarne);
@@ -51,17 +49,14 @@ public class CardapioTest {
         secaoVeganos.addItem(itemSmashVegano);
         secaoVeganos.addItem(itemVeganoDecorado);
 
-        // ── Acompanhamentos ────────────────────────────────────────────────────
         secaoAcompanhamentos = new SecaoCardapio("Acompanhamentos");
         secaoAcompanhamentos.addItem(new ItemAcompanhamento(new BatataFrita()));
         secaoAcompanhamentos.addItem(new ItemAcompanhamento(new Salada()));
 
-        // ── Bebidas ────────────────────────────────────────────────────────────
         secaoBebidas = new SecaoCardapio("Bebidas");
         secaoBebidas.addItem(new ItemBebida(new Refrigerante()));
         secaoBebidas.addItem(new ItemBebida(new SucoNatural()));
 
-        // ── Raiz ───────────────────────────────────────────────────────────────
         SecaoCardapio raiz = new SecaoCardapio("Cardápio Completo");
         raiz.addItem(secaoTradicionais);
         raiz.addItem(secaoVeganos);
@@ -71,8 +66,6 @@ public class CardapioTest {
         cardapio = new Cardapio();
         cardapio.setRaiz(raiz);
     }
-
-    // ─── Folha ItemHamburguer ─────────────────────────────────────────────────
 
     @Test
     public void deveItemHamburguerExibirDescricaoDaClasseReal() {
@@ -100,23 +93,17 @@ public class CardapioTest {
         assertEquals(22.0, itemVeganoDecorado.getHamburguer().getPreco());
     }
 
-    // ─── Folha ItemAcompanhamento ─────────────────────────────────────────────
-
     @Test
     public void deveItemAcompanhamentoExibirDescricaoCorreta() {
         ItemAcompanhamento item = new ItemAcompanhamento(new BatataFrita());
         assertTrue(item.getDetalhes().contains("Batata Frita Média"));
     }
 
-    // ─── Folha ItemBebida ─────────────────────────────────────────────────────
-
     @Test
     public void deveItemBebidaExibirDescricaoCorreta() {
         ItemBebida item = new ItemBebida(new SucoNatural());
         assertTrue(item.getDetalhes().contains("Suco de Laranja Natural"));
     }
-
-    // ─── SecaoCardapio (composite) ────────────────────────────────────────────
 
     @Test
     public void deveSecaoTradicionaisListarTodosOsLanches() {
@@ -139,8 +126,6 @@ public class CardapioTest {
         assertFalse(secaoBebidas.getDetalhes().contains("Refrigerante Cola"));
         assertTrue(secaoBebidas.getDetalhes().contains("Suco de Laranja Natural"));
     }
-
-    // ─── Cardápio completo (cliente) ──────────────────────────────────────────
 
     @Test
     public void deveCardapioExibirTodasAsSecoes() {
@@ -168,8 +153,6 @@ public class CardapioTest {
         Cardapio vazio = new Cardapio();
         assertThrows(NullPointerException.class, vazio::getCardapio);
     }
-
-    // ─── Polimorfismo uniforme ────────────────────────────────────────────────
 
     @Test
     public void deveTodosOsTiposDeFolhaImplementaremItemCardapio() {

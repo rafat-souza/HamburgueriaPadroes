@@ -17,8 +17,6 @@ public class AdapterTest {
         cliente = new ClienteVIP();
     }
 
-    // ── salvarFator: categoria → fator decimal (legado) ──────────────────────
-
     @Test
     public void deveCategoriaPREMIUMGerarFator030() {
         cliente.setCategoria("PREMIUM");
@@ -48,8 +46,6 @@ public class AdapterTest {
         cliente.setCategoria("OUTRO");
         assertEquals(0.05f, cliente.getFatorDesconto(), 0.001f);
     }
-
-    // ── recuperarCategoria: fator decimal → categoria (legado → hamburgueria) ─
 
     @Test
     public void deveFator030RecuperarCategoriaPREMIUM() {
@@ -87,8 +83,6 @@ public class AdapterTest {
         assertEquals("BRONZE", adapter.recuperarCategoria());
     }
 
-    // ── ClienteVIP: ida e volta entre os dois mundos ──────────────────────────
-
     @Test
     public void deveCategoriaIdaEVoltaPREMIUM() {
         cliente.setCategoria("PREMIUM");
@@ -106,8 +100,6 @@ public class AdapterTest {
         cliente.setCategoria("PRATA");
         assertEquals("PRATA", cliente.getCategoria());
     }
-
-    // ── Integração: EstrategiaDeDesconto aplicada ao Combo ───────────────────
 
     @Test
     public void deveEstrategiaVIPPREMIUMAplicar30PorCentoNoComboTradicional() {
@@ -150,8 +142,6 @@ public class AdapterTest {
         assertTrue(descricao.contains("OURO"));
         assertTrue(descricao.contains("20"));
     }
-
-    // ── Adapter implementa EstrategiaDeDesconto (polimorfismo) ───────────────
 
     @Test
     public void deveAdapterSerInstanceOfEstrategiaDeDesconto() {

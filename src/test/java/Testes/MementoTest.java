@@ -22,8 +22,6 @@ public class MementoTest {
         combo = new Combo(new FabricaComboTradicional());
     }
 
-    // ── salvarEstado ─────────────────────────────────────────────────────────
-
     @Test
     public void deveSalvarEstadoAdicionarMementoAoHistorico() {
         assertTrue(combo.getEstados().isEmpty());
@@ -68,8 +66,6 @@ public class MementoTest {
         assertTrue(descricao.contains("Refrigerante Cola"));
         assertTrue(descricao.contains("Sem desconto"));
     }
-
-    // ── restaurarEstado ──────────────────────────────────────────────────────
 
     @Test
     public void deveRestaurarEstadoInicialAposAdicionarExtras() {
@@ -125,8 +121,6 @@ public class MementoTest {
         assertEquals(2, combo.getEstados().size());
     }
 
-    // ── erros e limites ──────────────────────────────────────────────────────
-
     @Test
     public void deveLancarExcecaoAoRestaurarIndiceNegativo() {
         combo.salvarEstado();
@@ -149,8 +143,6 @@ public class MementoTest {
                 () -> combo.restaurarEstado(0));
     }
 
-    // ── getEstados (visão não-modificável) ───────────────────────────────────
-
     @Test
     public void deveGetEstadosRetornarListaNaoModificavel() {
         combo.salvarEstado();
@@ -159,18 +151,17 @@ public class MementoTest {
                 () -> combo.getEstados().clear());
     }
 
-    // ── polimorfismo via interface ComboEstado ────────────────────────────────
-
     @Test
     public void deveTodosOsEstadosSalvosImplementaremAInterface() {
         combo.salvarEstado();
         combo.setEstrategiaDeDesconto(new DescontoPorcentagem(10));
         combo.salvarEstado();
 
-        for (ComboEstado estado : combo.getEstados()) {
-            assertInstanceOf(ComboEstado.class, estado);
-            assertNotNull(estado.getDescricaoEstado());
-        }
+        assertInstanceOf(ComboEstado.class, combo.getEstados().get(0));
+        assertNotNull(combo.getEstados().get(0).getDescricaoEstado());
+
+        assertInstanceOf(ComboEstado.class, combo.getEstados().get(1));
+        assertNotNull(combo.getEstados().get(1).getDescricaoEstado());
     }
 
     @Test

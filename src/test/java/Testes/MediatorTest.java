@@ -5,10 +5,11 @@ import hamburgueria.Combo;
 import hamburgueria.Combos.FabricaComboTradicional;
 import hamburgueria.Combos.FabricaComboVegano;
 import hamburgueria.Descontos.DescontoPorcentagem;
+import hamburgueria.PedidoMediator;
+import hamburgueria.RelatorioDeCaixa;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MediatorTest {
 
@@ -20,7 +21,8 @@ public class MediatorTest {
         String resposta = atendente.fazerPedido(combo);
 
         assertTrue(resposta.contains("PedidoMediator"));
-        assertTrue(resposta.contains("Cozinha"));
+        assertTrue(resposta.contains("Cozinha começou a preparar"));
+        assertTrue(resposta.contains("Proteína grelhada"));
         assertTrue(resposta.contains("Caixa"));
     }
 
@@ -33,6 +35,7 @@ public class MediatorTest {
 
         assertTrue(resposta.contains("cancelamento"));
         assertTrue(resposta.contains("cancelou o preparo"));
+        assertTrue(resposta.contains("rollback das etapas"));
         assertTrue(resposta.contains("estornou"));
     }
 
@@ -46,18 +49,31 @@ public class MediatorTest {
 
         assertTrue(resposta.contains("pagamento"));
         assertTrue(resposta.contains("14,40") || resposta.contains("14.40"));
+        assertTrue(resposta.contains("[Métrica Sistema]"));
+    }
+
+    @Test
+    public void devePagamentoAdicionarPedidoAoHistoricoGlobalDaFila() {
+        Atendente atendente = new Atendente();
+        Combo combo = new Combo(new FabricaComboTradicional());
+
+        int totalAntes = RelatorioDeCaixa.contarTotalPedidos(PedidoMediator.getInstancia().getHistoricoGlobal());
+
+        atendente.processarPagamento(combo);
+
+        int totalDepois = RelatorioDeCaixa.contarTotalPedidos(PedidoMediator.getInstancia().getHistoricoGlobal());
+
+        assertEquals(totalAntes + 1, totalDepois);
     }
 
     @Test
     public void deveAtendenteComunicarSempreViaMediatorNuncaDiretamente() {
-
         Atendente atendente = new Atendente();
         Combo combo = new Combo(new FabricaComboTradicional());
 
         assertDoesNotThrow(() -> {
             atendente.fazerPedido(combo);
             atendente.processarPagamento(combo);
-            atendente.cancelarPedido(combo);
         });
     }
 

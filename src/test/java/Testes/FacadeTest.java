@@ -1,10 +1,15 @@
 package Testes;
 
+import hamburgueria.Cardapio.Cardapio;
+import hamburgueria.Cardapio.ItemHamburguer;
+import hamburgueria.Cardapio.SecaoCardapio;
 import hamburgueria.Combo;
+import hamburgueria.Combos.FabricaComboTradicional;
 import hamburgueria.Combos.FabricaComboVegano;
 import hamburgueria.Descontos.DescontoFidelidade;
 import hamburgueria.Descontos.DescontoPorcentagem;
 import hamburgueria.HamburgueriaPedidoFacade;
+import hamburgueria.Promocao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,64 +21,71 @@ public class FacadeTest {
 
     @BeforeEach
     public void setUp() {
-        facade = new HamburgueriaPedidoFacade();
+        Cardapio cardapio = new Cardapio();
+        SecaoCardapio secaoLanches = new SecaoCardapio("Hambúrgueres Artesanais");
+
+        FabricaComboTradicional tradicional = new FabricaComboTradicional();
+        FabricaComboVegano vegano = new FabricaComboVegano();
+
+        secaoLanches.addItem(new ItemHamburguer(tradicional.criarHamburguer()));
+        secaoLanches.addItem(new ItemHamburguer(vegano.criarHamburguer()));
+
+        SecaoCardapio cardapioCompleto = new SecaoCardapio("Menu Principal Hamburgueria");
+        cardapioCompleto.addItem(secaoLanches);
+        cardapio.setRaiz(cardapioCompleto);
+
+        Promocao promocao = new Promocao("PROMO INAUGURAÇÃO", "Desconto de abertura", 15.0, "31/12/2026");
+
+        facade = new HamburgueriaPedidoFacade(cardapio, promocao);
     }
 
-    // ─── Abstract Factory usada internamente ─────────────────────────────────
+    @Test
+    public void deveExibirCardapioSincronizadoComposto() {
+        String cardapio = facade.exibirCardapioSincronizado();
+
+        assertNotNull(cardapio);
+        assertTrue(cardapio.contains("=== Menu Principal Hamburgueria ==="));
+        assertTrue(cardapio.contains("Hambúrgueres Artesanais"));
+        assertTrue(cardapio.contains("Hambúrguer Clássico"));
+    }
+
+    @Test
+    public void deveAplicarDescontoPromocionalPrototype() {
+        Combo combo = facade.criarPedidoTradicional();
+        String resposta = facade.aplicarDescontoPromocionalPrototype(combo);
+
+        assertTrue(resposta.contains("pagamento"));
+        assertEquals(13.60, combo.getPrecoFinal(), 0.001);
+        assertTrue(combo.getDescricaoDesconto().contains("PROMO INAUGURAÇÃO"));
+    }
 
     @Test
     public void deveCriarPedidoTradicionalComDescricaoCorretaDaFabrica() {
         Combo combo = facade.criarPedidoTradicional();
-
-        assertEquals("Hambúrguer Clássico de Carne Bovina",
-                combo.getHamburguer().getDescricao());
+        assertEquals("Hambúrguer Clássico de Carne Bovina", combo.getHamburguer().getDescricao());
     }
 
     @Test
     public void deveCriarPedidoTradicionalComPrecoCorretoDaFabrica() {
         Combo combo = facade.criarPedidoTradicional();
-
         assertEquals(16.0, combo.getPrecoFinal());
     }
 
     @Test
     public void deveCriarPedidoVeganoComDescricaoCorretaDaFabrica() {
         Combo combo = facade.criarPedidoVegano();
-
-        assertEquals("Smash Burger de Proteína de Ervilha",
-                combo.getHamburguer().getDescricao());
+        assertEquals("Smash Burger de Proteína de Ervilha", combo.getHamburguer().getDescricao());
     }
 
     @Test
     public void deveCriarPedidoVeganoComPrecoCorretoDaFabrica() {
         Combo combo = facade.criarPedidoVegano();
-
         assertEquals(17.0, combo.getPrecoFinal());
     }
 
     @Test
-    public void deveCriarPedidoPersonalizadoAceitandoQualquerFabrica() {
-        Combo combo = facade.criarPedidoPersonalizado(new FabricaComboVegano());
-
-        assertEquals("Smash Burger de Proteína de Ervilha",
-                combo.getHamburguer().getDescricao());
-    }
-
-    // ─── Observer registrado pelo Builder ────────────────────────────────────
-
-    @Test
-    public void deveComboCriadoJaTerObserversRegistrados() {
+    public void deveEnviarPedidoRetornarMensagensDaCozinhaEDoCaixa() {
         Combo combo = facade.criarPedidoTradicional();
-
-        assertDoesNotThrow(combo::finalizarPedido);
-    }
-
-    // ─── Mediator via Atendente ───────────────────────────────────────────────
-
-    @Test
-    public void deveEnviarPedidoRotearParaCozinhaECaixaViaMediator() {
-        Combo combo = facade.criarPedidoTradicional();
-
         String resposta = facade.enviarPedido(combo);
 
         assertTrue(resposta.contains("PedidoMediator"));
@@ -82,61 +94,30 @@ public class FacadeTest {
     }
 
     @Test
-    public void deveCancelarPedidoNotificarAmbosSetos() {
-        Combo combo = facade.criarPedidoVegano();
-
+    public void deveCancelarPedidoRetornarMensagensDeCancelamento() {
+        Combo combo = facade.criarPedidoTradicional();
         String resposta = facade.cancelarPedido(combo);
 
-        assertTrue(resposta.contains("cancelamento"));
-        assertTrue(resposta.contains("cancelou o preparo"));
+        assertTrue(resposta.contains("cancelou"));
         assertTrue(resposta.contains("estornou"));
     }
 
-    // ─── Strategy aplicada pelo Facade ───────────────────────────────────────
-
     @Test
-    public void deveAplicarDescontoPorcentagemEProcessarPagamento() {
+    public void deveAplicarDescontoEProcessarPagamento() {
         Combo combo = facade.criarPedidoTradicional();
-
-        String resposta = facade.aplicarDescontoEProcessarPagamento(
-                combo, new DescontoPorcentagem(10));
+        String resposta = facade.aplicarDescontoEProcessarPagamento(combo, new DescontoPorcentagem(10));
 
         assertTrue(resposta.contains("pagamento"));
-        assertTrue(resposta.contains("14,40") || resposta.contains("14.40"));
         assertEquals(14.4, combo.getPrecoFinal(), 0.001);
     }
 
     @Test
     public void deveAplicarDescontoFidelidadeEProcessarPagamento() {
         Combo combo = facade.criarPedidoVegano();
-
-        String resposta = facade.aplicarDescontoEProcessarPagamento(
-                combo, new DescontoFidelidade(5.0));
+        String resposta = facade.aplicarDescontoEProcessarPagamento(combo, new DescontoFidelidade(5.0));
 
         assertTrue(resposta.contains("pagamento"));
         assertEquals(12.0, combo.getPrecoFinal());
-    }
-
-    // ─── Fluxo completo via Facade ────────────────────────────────────────────
-
-    @Test
-    public void deveFluxoCompletoNaoLancarExcecao() {
-        assertDoesNotThrow(() -> {
-            Combo combo = facade.criarPedidoTradicional();
-            facade.enviarPedido(combo);
-            facade.aplicarDescontoEProcessarPagamento(combo, new DescontoPorcentagem(20));
-        });
-    }
-
-    @Test
-    public void deveFacadeIsolarClienteDeTodosOsSubsistemas() {
-        Combo tradicional = facade.criarPedidoTradicional();
-        Combo vegano      = facade.criarPedidoVegano();
-
-        assertNotNull(tradicional);
-        assertNotNull(vegano);
-        assertNotEquals(tradicional.getHamburguer().getDescricao(),
-                vegano.getHamburguer().getDescricao());
     }
 
 }

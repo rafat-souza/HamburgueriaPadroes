@@ -34,8 +34,6 @@ public class VisitorTest {
         json   = new ExportadorJsonVisitor();
     }
 
-    // ── ResumoVisitor: hambúrguer isolado ────────────────────────────────────
-
     @Test
     public void deveResumoVisitorExibirDescricaoDoHamburguer() {
         Hamburguer burger = new BurgerClassico(new Carne());
@@ -60,8 +58,6 @@ public class VisitorTest {
         assertTrue(resultado.contains("Queijo Cheddar"));
         assertTrue(resultado.contains("Cebola Caramelizada"));
     }
-
-    // ── ResumoVisitor: combo completo ────────────────────────────────────────
 
     @Test
     public void deveResumoVisitorExibirTodosOsElementosDoComboTradicional() {
@@ -103,8 +99,6 @@ public class VisitorTest {
         assertTrue(resultado.contains("16,00") || resultado.contains("16.00"));
     }
 
-    // ── ExportadorJsonVisitor: hambúrguer isolado ────────────────────────────
-
     @Test
     public void deveJsonVisitorGerarChaveTipoHamburguer() {
         Hamburguer burger = new BurgerClassico(new Carne());
@@ -131,8 +125,6 @@ public class VisitorTest {
         assertTrue(resultado.contains("Bacon de Soja"));
         assertTrue(resultado.contains("Queijo Cheddar"));
     }
-
-    // ── ExportadorJsonVisitor: combo completo ────────────────────────────────
 
     @Test
     public void deveJsonVisitorGerarJsonComTodosOsCamposDoCombo() {
@@ -165,8 +157,6 @@ public class VisitorTest {
         assertTrue(resultado.contains("8,00") || resultado.contains("8.00"));
     }
 
-    // ── Double dispatch: diferentes visitors, mesmo elemento ─────────────────
-
     @Test
     public void deveMesmoComboProduzirFormatsCompletamenteDiferentes() {
         Combo combo = new Combo(new FabricaComboTradicional());
@@ -179,18 +169,17 @@ public class VisitorTest {
         assertTrue(resultadoJson.startsWith("{") && resultadoJson.endsWith("}"));
     }
 
-    // ── Visitor como interface — polimorfismo ─────────────────────────────────
-
     @Test
     public void deveVisitorInterfaceAceitarQualquerImplementacao() {
         Combo combo = new Combo(new FabricaComboVegano());
 
-        HamburgueriaVisitor[] visitors = { resumo, json };
-        for (HamburgueriaVisitor v : visitors) {
-            String resultado = combo.aceitar(v);
-            assertNotNull(resultado);
-            assertFalse(resultado.isBlank());
-        }
+        String resultadoResumo = combo.aceitar(resumo);
+        assertNotNull(resultadoResumo);
+        assertFalse(resultadoResumo.isBlank());
+
+        String resultadoJson = combo.aceitar(json);
+        assertNotNull(resultadoJson);
+        assertFalse(resultadoJson.isBlank());
     }
 
 }

@@ -29,41 +29,33 @@ public class CadeiaDeAprovacaoTest {
         atendente = new FuncionarioAtendente(caixa);
     }
 
-    // ─── Atendimento correto por cargo ───────────────────────────────────────
-
     @Test
     public void deveAtendenteTratarSolicitacaoDeInformacao() {
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
 
         assertEquals("Atendente", atendente.atenderSolicitacao(solicitacao));
     }
 
     @Test
     public void deveCaixaTratarSolicitacaoDeDesconto() {
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoDesconto.getTipoSolicitacaoDesconto());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoDesconto.getTipoSolicitacaoDesconto());
 
         assertEquals("Caixa", atendente.atenderSolicitacao(solicitacao));
     }
 
     @Test
     public void deveGerenteTratarSolicitacaoDeCancelamento() {
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoCancelamento.getTipoSolicitacaoCancelamento());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoCancelamento.getTipoSolicitacaoCancelamento());
 
         assertEquals("Gerente", atendente.atenderSolicitacao(solicitacao));
     }
 
     @Test
     public void deveDonoTratarSolicitacaoDeReembolso() {
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoReembolso.getTipoSolicitacaoReembolso());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoReembolso.getTipoSolicitacaoReembolso());
 
         assertEquals("Dono", atendente.atenderSolicitacao(solicitacao));
     }
-
-    // ─── Topo da cadeia sem superior ─────────────────────────────────────────
 
     @Test
     public void deveCadeiaRetornarSemAtendimentoParaTipoDesconhecido() {
@@ -75,13 +67,10 @@ public class CadeiaDeAprovacaoTest {
     @Test
     public void deveDonoSemSuperiorRetornarSemAtendimentoDireto() {
         FuncionarioDono dono = new FuncionarioDono();
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
 
         assertEquals("Sem atendimento", dono.atenderSolicitacao(solicitacao));
     }
-
-    // ─── Singletons — identidade de instância ────────────────────────────────
 
     @Test
     public void deveTipoSolicitacaoInformacaoSerSingleton() {
@@ -115,8 +104,6 @@ public class CadeiaDeAprovacaoTest {
         );
     }
 
-    // ─── Hierarquia da cadeia ─────────────────────────────────────────────────
-
     @Test
     public void deveCadeiaIniciarPeloAtendente() {
         assertEquals("Atendente", atendente.getDescricaoCargo());
@@ -146,24 +133,20 @@ public class CadeiaDeAprovacaoTest {
         assertEquals(null, topo.getFuncionarioSuperior());
     }
 
-    // ─── Início da cadeia no meio ─────────────────────────────────────────────
-
     @Test
     public void deveCaixaIniciarCadeiaEDelegarAoGerente() {
-        FuncionarioDono    dono    = new FuncionarioDono();
+        FuncionarioDono dono = new FuncionarioDono();
         FuncionarioGerente gerente = new FuncionarioGerente(dono);
-        FuncionarioCaixa   caixa   = new FuncionarioCaixa(gerente);
+        FuncionarioCaixa caixa = new FuncionarioCaixa(gerente);
 
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoCancelamento.getTipoSolicitacaoCancelamento());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoCancelamento.getTipoSolicitacaoCancelamento());
 
         assertEquals("Gerente", caixa.atenderSolicitacao(solicitacao));
     }
 
     @Test
     public void deveSolicitacaoDeInformacaoNaoChegarAoDono() {
-        Solicitacao solicitacao =
-                new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
+        Solicitacao solicitacao = new Solicitacao(TipoSolicitacaoInformacao.getTipoSolicitacaoInformacao());
 
         String responsavel = atendente.atenderSolicitacao(solicitacao);
         assertEquals("Atendente", responsavel);

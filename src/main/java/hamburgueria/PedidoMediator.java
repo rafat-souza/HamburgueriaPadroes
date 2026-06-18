@@ -18,6 +18,10 @@ public class PedidoMediator {
         return instancia;
     }
 
+    public FilaDePedidos getHistoricoGlobal() {
+        return historicoGlobal;
+    }
+
     public String receberNovoPedidoAtendente(Combo combo) {
         return "O PedidoMediator registrou o pedido e notificou os setores.\n" +
                 ">>" + new Cozinha().receberNovoPedido(combo) + "\n" +

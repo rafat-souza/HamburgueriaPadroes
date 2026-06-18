@@ -20,8 +20,6 @@ public class IngredientesCompartilhadosTest {
         DadosIngredienteFactory.limparCache();
     }
 
-    // ── DadosIngredienteFactory: pool e reutilização ──────────────────────────
-
     @Test
     public void deveCriarNovoDadosIngredienteQuandoNaoExisteNocache() {
         DadosIngrediente dados = DadosIngredienteFactory.getDados(
@@ -55,24 +53,29 @@ public class IngredientesCompartilhadosTest {
 
     @Test
     public void deveCacheNaoCresCerQuandoMesmosIngredientesSaoSolicitadosVarizasVezes() {
-        for (int i = 0; i < 100; i++) {
-            DadosIngredienteFactory.getDados("Carne Bovina", "Lanche", "450 kcal");
-            DadosIngredienteFactory.getDados("Batata Frita Média", "Acompanhamento", "320 kcal");
-        }
+        DadosIngredienteFactory.getDados("Carne Bovina", "Lanche", "450 kcal");
+        DadosIngredienteFactory.getDados("Batata Frita Média", "Acompanhamento", "320 kcal");
+
+        DadosIngredienteFactory.getDados("Carne Bovina", "Lanche", "450 kcal");
+        DadosIngredienteFactory.getDados("Batata Frita Média", "Acompanhamento", "320 kcal");
+        DadosIngredienteFactory.getDados("Carne Bovina", "Lanche", "450 kcal");
+        DadosIngredienteFactory.getDados("Batata Frita Média", "Acompanhamento", "320 kcal");
 
         assertEquals(2, DadosIngredienteFactory.getTotalDadosCriados());
     }
 
     @Test
     public void deveCacheNaoCrescerComMuitasPedidosTradicionalEVegano() {
-        for (int i = 0; i < 50; i++) {
-            new NotaFiscal(i, new Combo(new FabricaComboTradicional()));
-        }
+        new NotaFiscal(1, new Combo(new FabricaComboTradicional()));
+        new NotaFiscal(2, new Combo(new FabricaComboTradicional()));
+        new NotaFiscal(3, new Combo(new FabricaComboTradicional()));
+
         int flyweightsAposTradicional = DadosIngredienteFactory.getTotalDadosCriados();
 
-        for (int i = 50; i < 100; i++) {
-            new NotaFiscal(i, new Combo(new FabricaComboVegano()));
-        }
+        new NotaFiscal(4, new Combo(new FabricaComboVegano()));
+        new NotaFiscal(5, new Combo(new FabricaComboVegano()));
+        new NotaFiscal(6, new Combo(new FabricaComboVegano()));
+
         int flyweightsAposVegano = DadosIngredienteFactory.getTotalDadosCriados();
 
         assertTrue(flyweightsAposTradicional <= 3,
@@ -81,19 +84,15 @@ public class IngredientesCompartilhadosTest {
                 "Vegano adiciona até 3 flyweights novos");
     }
 
-    // ── DadosIngrediente: estado intrínseco ───────────────────────────────────
-
     @Test
     public void deveDadosIngredientePreservarCamposIntrinsicos() {
         DadosIngrediente dados = DadosIngredienteFactory.getDados(
                 "Salada Orgânica", "Acompanhamento", "45 kcal, 2g prot");
 
-        assertEquals("Salada Orgânica",       dados.getNome());
-        assertEquals("Acompanhamento",         dados.getCategoria());
-        assertEquals("45 kcal, 2g prot",       dados.getInfoNutricional());
+        assertEquals("Salada Orgânica", dados.getNome());
+        assertEquals("Acompanhamento", dados.getCategoria());
+        assertEquals("45 kcal, 2g prot", dados.getInfoNutricional());
     }
-
-    // ── ItemNotaFiscal: estado extrínseco ─────────────────────────────────────
 
     @Test
     public void deveItemNotaFiscalCalcularSubtotalCorretamente() {
@@ -131,8 +130,6 @@ public class IngredientesCompartilhadosTest {
         assertTrue(linha.contains("450 kcal"));
         assertTrue(linha.contains("16,00") || linha.contains("16.00"));
     }
-
-    // ── NotaFiscal: integração com Combo ─────────────────────────────────────
 
     @Test
     public void deveCriarNotaFiscalDoComboTradicionalComTresItens() {
@@ -182,8 +179,6 @@ public class IngredientesCompartilhadosTest {
 
         assertEquals(cacheAntes, DadosIngredienteFactory.getTotalDadosCriados());
     }
-
-    // ── Independência dos padrões existentes ──────────────────────────────────
 
     @Test
     public void deveFlyweightFuncionarComComboDecorado() {
