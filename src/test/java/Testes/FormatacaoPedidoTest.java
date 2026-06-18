@@ -12,7 +12,6 @@ import hamburgueria.Extras.BaconVegano;
 import hamburgueria.Extras.CebolaCaramelizada;
 import hamburgueria.Extras.Queijo;
 import hamburgueria.Hamburguer;
-import hamburgueria.HamburgueriaVisitor;
 import hamburgueria.Proteinas.Carne;
 import hamburgueria.Proteinas.Planta;
 import hamburgueria.Visitantes.ExportadorJsonVisitor;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class VisitorTest {
+public class FormatacaoPedidoTest {
 
     private ResumoVisitor resumo;
     private ExportadorJsonVisitor json;

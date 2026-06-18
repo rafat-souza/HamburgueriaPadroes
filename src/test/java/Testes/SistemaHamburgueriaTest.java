@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FacadeTest {
+public class SistemaHamburgueriaTest {
 
     private HamburgueriaPedidoFacade facade;
 
