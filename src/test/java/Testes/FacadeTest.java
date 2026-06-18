@@ -109,6 +109,9 @@ public class FacadeTest {
 
         assertTrue(resposta.contains("pagamento"));
         assertEquals(14.4, combo.getPrecoFinal(), 0.001);
+
+        assertTrue(resposta.contains("Emitindo Comprovante"));
+        assertTrue(resposta.contains("Hambúrguer Clássico de Carne Bovina"));
     }
 
     @Test
@@ -118,6 +121,9 @@ public class FacadeTest {
 
         assertTrue(resposta.contains("pagamento"));
         assertEquals(12.0, combo.getPrecoFinal());
+
+        assertTrue(resposta.contains("Emitindo Comprovante"));
+        assertTrue(resposta.contains("Smash Burger de Proteína de Ervilha"));
     }
 
 }

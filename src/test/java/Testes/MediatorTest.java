@@ -50,6 +50,9 @@ public class MediatorTest {
         assertTrue(resposta.contains("pagamento"));
         assertTrue(resposta.contains("14,40") || resposta.contains("14.40"));
         assertTrue(resposta.contains("[Métrica Sistema]"));
+
+        assertTrue(resposta.contains("Emitindo Comprovante"));
+        assertTrue(resposta.contains("Hambúrguer Clássico de Carne Bovina"));
     }
 
     @Test
